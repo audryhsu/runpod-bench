@@ -1,0 +1,12 @@
+{
+  "nr_throttled_delta": 61,
+  "throttled_usec_delta": 360120699,
+  "before": {
+    "nr_throttled": 62,
+    "throttled_usec": 287769308
+  },
+  "after": {
+    "nr_throttled": 123,
+    "throttled_usec": 647890007
+  }
+}
