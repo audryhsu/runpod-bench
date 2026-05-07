@@ -58,12 +58,15 @@ export HF_TOKEN=hf_xxxxx
 Launches the baseline Docker container with flags matched to what RunPod configures for pods. This ensures the comparison isolates RunPod's orchestration overhead, not differences in Docker run flags.
 
 ```bash
+HF_CACHE="${HF_HOME:-$HOME/.cache/huggingface}"
+
 docker run --gpus all -it --rm \
   --shm-size=16g \
   --ipc=host \
   --ulimit memlock=-1 \
   --ulimit stack=67108864 \
   -v "$(pwd)":/bench \
+  -v "$HF_CACHE":/root/.cache/huggingface \
   -w /bench \
   -e HF_TOKEN="$HF_TOKEN" \
   -e HF_HUB_DISABLE_XET=1 \
@@ -76,6 +79,9 @@ Key flags:
 - `--ipc=host` -- matches RunPod's IPC namespace sharing for NCCL
 - `--ulimit memlock=-1` -- unlimited locked memory, required for GPU DMA
 - `-v $(pwd):/bench` -- bind-mounts the harness + results directory so data persists after container exit
+- `-v $HF_HOME:/root/.cache/huggingface` -- bind-mounts the host's HF cache so model weights don't need to be re-downloaded inside the container (setup.sh pre-warms the cache on first run)
+
+The script auto-detects `HF_HOME` (defaults to `~/.cache/huggingface` if unset).
 
 ## Configuration
 
