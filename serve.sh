@@ -15,6 +15,7 @@ echo "Model: $MODEL"
 echo "Port: $VLLM_PORT"
 echo "GPU memory utilization: $VLLM_GPU_MEM_UTIL"
 echo "Max model len: $VLLM_MAX_MODEL_LEN"
+echo "Tensor parallel size: $VLLM_TP_SIZE"
 
 exec vllm serve "$MODEL" \
   --host 0.0.0.0 \
@@ -23,4 +24,5 @@ exec vllm serve "$MODEL" \
   $ENFORCE_EAGER_FLAG \
   --gpu-memory-utilization "$VLLM_GPU_MEM_UTIL" \
   --max-model-len "$VLLM_MAX_MODEL_LEN" \
+  --tensor-parallel-size "$VLLM_TP_SIZE" \
   --seed "$SEED"

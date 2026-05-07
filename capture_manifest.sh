@@ -59,6 +59,7 @@ CONFIG_SNAPSHOT=$(jq -n \
   --arg max_model_len "$VLLM_MAX_MODEL_LEN" \
   --arg dtype "$VLLM_DTYPE" \
   --arg enforce_eager "$VLLM_ENFORCE_EAGER" \
+  --arg tp_size "$VLLM_TP_SIZE" \
   --arg input_len "$INPUT_LEN" \
   --arg output_len "$OUTPUT_LEN" \
   --arg num_prompts "$NUM_PROMPTS" \
@@ -66,7 +67,7 @@ CONFIG_SNAPSHOT=$(jq -n \
   --arg bench_runs "$BENCH_RUNS" \
   --arg warmup_runs "$WARMUP_RUNS" \
   --arg seed "$SEED" \
-  '{model:$model,vllm_port:$vllm_port,gpu_mem_util:$gpu_mem_util,max_model_len:$max_model_len,dtype:$dtype,enforce_eager:$enforce_eager,input_len:$input_len,output_len:$output_len,num_prompts:$num_prompts,request_rates:$request_rates,bench_runs:$bench_runs,warmup_runs:$warmup_runs,seed:$seed}')
+  '{model:$model,vllm_port:$vllm_port,gpu_mem_util:$gpu_mem_util,max_model_len:$max_model_len,dtype:$dtype,enforce_eager:$enforce_eager,tp_size:$tp_size,input_len:$input_len,output_len:$output_len,num_prompts:$num_prompts,request_rates:$request_rates,bench_runs:$bench_runs,warmup_runs:$warmup_runs,seed:$seed}')
 
 # Emit JSON
 jq -n \
