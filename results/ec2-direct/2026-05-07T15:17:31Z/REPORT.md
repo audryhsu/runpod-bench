@@ -285,10 +285,8 @@ initially attributed to the container layer.
 After re-running with vLLM 0.16.0 pinned on both sides (this report), most
 of those gains disappeared. The previously-attributed "container layer
 overhead" was almost entirely the vLLM-version difference. The earlier
-result is preserved alongside this run at
-[`../2026-05-07T06:41:28Z/`](../2026-05-07T06:41:28Z/) for audit. The
-harness now supports `VLLM_VERSION=<x.y.z>` to prevent this class of
-mistake.
+mismatched run was discarded; the harness now supports
+`VLLM_VERSION=<x.y.z>` to prevent this class of mistake.
 
 The lesson: when the comparison is about anything below the runtime, pin
 the runtime explicitly.
