@@ -14,7 +14,7 @@ fi
 GPU_MODEL=$(nvidia-smi --query-gpu=name --format=csv,noheader | head -1 | xargs)
 GPU_COUNT=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l | xargs)
 GPU_DRIVER=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader | head -1 | xargs)
-CUDA_VERSION=$(nvidia-smi | grep "CUDA Version" | awk '{print $9}')
+CUDA_VERSION=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader | head -1 | xargs 2>/dev/null || echo "unknown")
 
 # CPU info
 CPU_MODEL=$(grep "model name" /proc/cpuinfo | head -1 | cut -d: -f2 | xargs)
