@@ -2,7 +2,7 @@
 
 **Run date:** 2026-05-07
 **Owner:** audry.hsu@runpod.io
-**Branch:** [`results/ec2-direct-2026-05-07`](https://github.com/audryhsu/runpod-bench/tree/results/ec2-direct-2026-05-07)
+**Run directory:** [`results/ec2-direct/2026-05-07T15:17:31Z/`](./)
 
 ---
 
@@ -247,15 +247,14 @@ Almost all of the 360 ms lands in the rate=`inf` scenario.
 
 ## Appendix: data and reproducibility
 
-All raw output, manifests, and per-rate JSON results live under
-[`results/ec2-direct/2026-05-07T15:17:31Z/`](https://github.com/audryhsu/runpod-bench/tree/results/ec2-direct-2026-05-07/results/ec2-direct/2026-05-07T15:17:31Z)
-in the bench branch. Key files:
+All raw output, manifests, and per-rate JSON results live alongside this
+report in the same directory. Key files (relative links):
 
-- `manifest.json` — full host/container/version snapshot
-- `summary.json` / `summary.txt` — per-rate aggregate metrics
-- `vllm_serving/rate_*/run_*.json` — per-run vLLM bench-serve output
-- `cpu/cgroup_throttle.json` — pre/post throttle counters
-- `COMPARISON.md` — earlier per-scenario technical writeup
+- [`manifest.json`](./manifest.json) — full host/container/version snapshot
+- [`summary.json`](./summary.json) / [`summary.txt`](./summary.txt) — per-rate aggregate metrics
+- [`vllm_serving/`](./vllm_serving/) — per-run vLLM bench-serve output, organized by rate
+- [`cpu/cgroup_throttle.json`](./cpu/cgroup_throttle.json) — pre/post throttle counters
+- [`COMPARISON.md`](./COMPARISON.md) — earlier per-scenario technical writeup
 
 To reproduce, on the same EC2 host:
 
@@ -286,9 +285,10 @@ initially attributed to the container layer.
 After re-running with vLLM 0.16.0 pinned on both sides (this report), most
 of those gains disappeared. The previously-attributed "container layer
 overhead" was almost entirely the vLLM-version difference. The earlier
-result is preserved on the same branch under `2026-05-07T06:41:28Z/` for
-audit. The harness now supports `VLLM_VERSION=<x.y.z>` to prevent this
-class of mistake.
+result is preserved alongside this run at
+[`../2026-05-07T06:41:28Z/`](../2026-05-07T06:41:28Z/) for audit. The
+harness now supports `VLLM_VERSION=<x.y.z>` to prevent this class of
+mistake.
 
 The lesson: when the comparison is about anything below the runtime, pin
 the runtime explicitly.
