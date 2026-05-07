@@ -25,6 +25,7 @@ export VLLM_GPU_MEM_UTIL="${VLLM_GPU_MEM_UTIL:-0.95}"
 export VLLM_MAX_MODEL_LEN="${VLLM_MAX_MODEL_LEN:-8128}"
 export VLLM_DTYPE="${VLLM_DTYPE:-auto}"
 export VLLM_ENFORCE_EAGER="${VLLM_ENFORCE_EAGER:-1}"
+export VLLM_TP_SIZE="${VLLM_TP_SIZE:-1}"
 
 # --- Workload ---
 export INPUT_LEN="${INPUT_LEN:-512}"
