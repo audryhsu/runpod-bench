@@ -10,14 +10,19 @@ if [[ -f /.dockerenv ]] || [[ -f /run/.containerenv ]]; then
   IN_CONTAINER="true"
 fi
 
-# GPU info
-GPU_MODEL=$(nvidia-smi --query-gpu=name --format=csv,noheader | head -1 | xargs)
-GPU_COUNT=$(nvidia-smi --query-gpu=name --format=csv,noheader | wc -l | xargs)
-GPU_DRIVER=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader | head -1 | xargs)
-CUDA_VERSION=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader | head -1 | xargs 2>/dev/null || echo "unknown")
+# GPU info -- avoid `... | head -1` (SIGPIPE under pipefail).
+# Capture full output once, then parse with awk.
+GPU_NAMES=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null || echo "")
+GPU_DRIVERS=$(nvidia-smi --query-gpu=driver_version --format=csv,noheader 2>/dev/null || echo "")
+GPU_CAPS=$(nvidia-smi --query-gpu=compute_cap --format=csv,noheader 2>/dev/null || echo "")
+GPU_MODEL=$(echo "$GPU_NAMES" | awk 'NR==1 {sub(/^[ \t]+/,""); sub(/[ \t]+$/,""); print; exit}')
+GPU_COUNT=$(echo "$GPU_NAMES" | awk 'NF{c++} END{print c+0}')
+GPU_DRIVER=$(echo "$GPU_DRIVERS" | awk 'NR==1 {sub(/^[ \t]+/,""); sub(/[ \t]+$/,""); print; exit}')
+CUDA_VERSION=$(echo "$GPU_CAPS" | awk 'NR==1 {sub(/^[ \t]+/,""); sub(/[ \t]+$/,""); print; exit}')
+[[ -z "$CUDA_VERSION" ]] && CUDA_VERSION="unknown"
 
 # CPU info
-CPU_MODEL=$(grep "model name" /proc/cpuinfo | head -1 | cut -d: -f2 | xargs)
+CPU_MODEL=$(awk -F: '/^model name/ {sub(/^[ \t]+/, "", $2); print $2; exit}' /proc/cpuinfo)
 CPU_COUNT=$(nproc)
 
 # Memory

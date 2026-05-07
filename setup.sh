@@ -11,7 +11,8 @@ if ! nvidia-smi > /dev/null 2>&1; then
   echo "ERROR: nvidia-smi failed. Are NVIDIA drivers and GPUs available?" >&2
   exit 1
 fi
-echo "GPU check: OK ($(nvidia-smi --query-gpu=name --format=csv,noheader | head -1))"
+_GPU_NAME=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | awk 'NR==1 {print; exit}')
+echo "GPU check: OK ($_GPU_NAME)"
 
 # Install system dependencies
 echo "=== Setup: installing system packages ==="
