@@ -25,8 +25,11 @@ The harness is a self-contained directory of bash scripts + two Python scripts. 
 
 ### Operator Workflow
 
+**Important: only one environment at a time.** The baseline container and RunPod pod must not run simultaneously. GPU memory (vLLM claims 95% of VRAM), CPU, and IO bandwidth are shared resources -- running both would measure contention, not orchestration overhead. Stop/remove one before starting the other.
+
 ```
 # --- Baseline (A): vanilla Docker on EC2 ---
+# Ensure no RunPod pod is running on this machine (stop it from dashboard or GraphQL)
 # SSH into EC2 host, from the runpod-bench/ directory:
 export HF_TOKEN=hf_xxxxx
 ./launch_baseline.sh        # docker run with correct flags, drops you into container
