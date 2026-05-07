@@ -1,0 +1,21 @@
+=== vLLM Serving ===
+Rate   | Tput req/s | Tput tok/s |   TTFT p50 |   TTFT p99 |   TPOT p50
+---------------------------------------------------------------------------
+1      |        1.0 |      128.0 |       42.0 |       57.0 |        8.2
+4      |        4.0 |      512.0 |       55.0 |       79.0 |        8.5
+inf    |       18.5 |     2368.0 |      320.0 |      448.0 |        9.0
+
+=== Cold Start ===
+Median: 28.2s | p95: 28.46s
+
+=== Storage (fio) ===
+Profile      |  BW (MB/s) |       IOPS |    Lat p50 |    Lat p99
+------------------------------------------------------------
+seq_read     |     3200.0 |     3200.0 |    0.300ms |    1.200ms
+seq_write    |     2000.0 |     2000.0 |    0.480ms |    1.800ms
+rand_read    |     1024.0 |     4096.0 |    0.950ms |    3.200ms
+rand_write   |       64.0 |    16384.0 |    0.220ms |    0.800ms
+
+=== CPU ===
+sysbench: 12400.5 events/s, avg lat 0.08ms, p95 lat 0.1ms
+cgroup throttle: nr_throttled=0, throttled_usec=0

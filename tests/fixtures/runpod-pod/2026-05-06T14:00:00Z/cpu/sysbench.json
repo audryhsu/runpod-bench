@@ -1,0 +1,8 @@
+{
+  "events_per_sec": 12348.2,
+  "latency_avg_ms": 0.081,
+  "latency_p95_ms": 0.101,
+  "total_events": 370446,
+  "threads": 192,
+  "duration_s": 30
+}

@@ -1,0 +1,13 @@
+{
+  "request_throughput": 1.0,
+  "output_throughput": 127.5,
+  "mean_ttft_ms": 45.675000000000004,
+  "median_ttft_ms": 43.5,
+  "p99_ttft_ms": 59.5,
+  "mean_tpot_ms": 8.549000000000001,
+  "median_tpot_ms": 8.3,
+  "p99_tpot_ms": 10.2,
+  "mean_itl_ms": 8.363999999999999,
+  "median_itl_ms": 8.2,
+  "p99_itl_ms": 9.6
+}
