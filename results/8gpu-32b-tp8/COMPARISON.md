@@ -2,8 +2,8 @@
 
 | | |
 |--|--|
-| Baseline (A) | `results/ec2-direct-32b-tp8/2026-05-07T17:48:31Z/` |
-| Treatment (B) | `results/runpod-32b-tp8/2026-05-08T20:37:46Z/` |
+| Baseline (A) | `results/8gpu-32b-tp8/ec2-direct/2026-05-07T17:48:31Z/` |
+| Treatment (B) | `results/8gpu-32b-tp8/runpod-pod/2026-05-08T20:37:46Z/` |
 | Same image | `runpod/pytorch:2.8.0-py3.11-cuda12.8.1-cudnn-devel-ubuntu22.04` |
 | Same vLLM | 0.16.0 |
 | Same torch | 2.9.1+cu128 |

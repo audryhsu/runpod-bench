@@ -172,8 +172,9 @@ BENCH_RUNS=5 NUM_PROMPTS=200 REQUEST_RATES="16 32 64 128 inf" VLLM_TP_SIZE=8 \
 
 ## Files
 
-- [`manifest.json`](./manifest.json) — host/container/version snapshot
-- [`summary.json`](./summary.json) / [`summary.txt`](./summary.txt) — per-rate aggregate metrics
-- [`vllm_serving/`](./vllm_serving/) — per-run vLLM bench-serve output
-- [`cpu/cgroup_throttle.json`](./cpu/cgroup_throttle.json) — pre/post throttle counters (zero deltas)
+- [`runpod-pod/2026-05-08T20:37:46Z/manifest.json`](./runpod-pod/2026-05-08T20:37:46Z/manifest.json) — host/container/version snapshot
+- [`runpod-pod/2026-05-08T20:37:46Z/summary.json`](./runpod-pod/2026-05-08T20:37:46Z/summary.json) / [`runpod-pod/2026-05-08T20:37:46Z/summary.txt`](./runpod-pod/2026-05-08T20:37:46Z/summary.txt) — per-rate aggregate metrics
+- [`runpod-pod/2026-05-08T20:37:46Z/vllm_serving/`](./runpod-pod/2026-05-08T20:37:46Z/vllm_serving/) — per-run vLLM bench-serve output
+- [`runpod-pod/2026-05-08T20:37:46Z/cpu/cgroup_throttle.json`](./runpod-pod/2026-05-08T20:37:46Z/cpu/cgroup_throttle.json) — pre/post throttle counters (zero deltas)
 - [`COMPARISON.md`](./COMPARISON.md) — full rate-by-rate delta table vs EC2-direct
+- [`ec2-direct/2026-05-07T17:48:31Z/SUMMARY.md`](./ec2-direct/2026-05-07T17:48:31Z/SUMMARY.md) — per-run summary for the EC2-direct baseline

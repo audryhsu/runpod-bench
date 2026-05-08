@@ -117,7 +117,7 @@ versions, cgroup limits, GPU count) so the comparison is fair.
 
 ## Files
 
-- [`manifest.json`](./manifest.json) — full host/container/version snapshot
-- [`summary.json`](./summary.json) / [`summary.txt`](./summary.txt) — per-rate aggregate metrics
-- [`vllm_serving/`](./vllm_serving/) — per-run vLLM bench-serve output, organized by rate
-- [`cpu/cgroup_throttle.json`](./cpu/cgroup_throttle.json) — pre/post throttle counters (zero)
+- [`ec2-direct/2026-05-07T17:48:31Z/manifest.json`](./ec2-direct/2026-05-07T17:48:31Z/manifest.json) — full host/container/version snapshot
+- [`ec2-direct/2026-05-07T17:48:31Z/summary.json`](./ec2-direct/2026-05-07T17:48:31Z/summary.json) / [`ec2-direct/2026-05-07T17:48:31Z/summary.txt`](./ec2-direct/2026-05-07T17:48:31Z/summary.txt) — per-rate aggregate metrics
+- [`ec2-direct/2026-05-07T17:48:31Z/vllm_serving/`](./ec2-direct/2026-05-07T17:48:31Z/vllm_serving/) — per-run vLLM bench-serve output, organized by rate
+- [`ec2-direct/2026-05-07T17:48:31Z/cpu/cgroup_throttle.json`](./ec2-direct/2026-05-07T17:48:31Z/cpu/cgroup_throttle.json) — pre/post throttle counters (zero)
