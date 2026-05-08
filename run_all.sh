@@ -1,43 +1,81 @@
 #!/usr/bin/env bash
 # run_all.sh -- Top-level orchestrator for all benchmarks.
-# Usage: ./run_all.sh --env-name <name> [--runs <n>] [--skip-fio] [--skip-cpu] [--skip-cold-start]
+#
+# Usage:
+#   ./run_all.sh --comparison <name> --env-name <ec2-direct|runpod-pod> \
+#                [--runs <n>] [--skip-fio] [--skip-cpu] [--skip-cold-start]
+#
+# Results land in: results/<comparison>/<env-name>/<timestamp>/
+#
+# Examples:
+#   # Bare Docker baseline on EC2 host:
+#   ./run_all.sh --comparison 8gpu-32b-tp8 --env-name ec2-direct
+#
+#   # Inside a Runpod pod:
+#   ./run_all.sh --comparison 8gpu-32b-tp8 --env-name runpod-pod
+#
+# Convention for --comparison: short slug describing the workload, e.g.
+#   1gpu-8b-tp1, 8gpu-32b-tp8, h100-70b-tp4
+#
+# Convention for --env-name: the side of the comparison being run.
+#   Recommended values: ec2-direct, runpod-pod (or baseline, treatment).
+#
+# Legacy mode (no --comparison): writes to results/<env-name>/<timestamp>/.
+# Prints a deprecation warning. Kept for back-compat with older docs.
 
 source "$(dirname "$0")/config.sh"
 
 # --- Parse arguments ---
+COMPARISON=""
 ENV_NAME=""
 SKIP_FIO=false
 SKIP_CPU=false
 SKIP_COLD_START=false
 
+usage() {
+  sed -n '4,22p' "$0"
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --comparison)  COMPARISON="$2"; shift 2 ;;
     --env-name)    ENV_NAME="$2"; shift 2 ;;
     --runs)        BENCH_RUNS="$2"; TOTAL_RUNS=$((WARMUP_RUNS + BENCH_RUNS)); shift 2 ;;
     --skip-fio)    SKIP_FIO=true; shift ;;
     --skip-cpu)    SKIP_CPU=true; shift ;;
     --skip-cold-start) SKIP_COLD_START=true; shift ;;
+    -h|--help)     usage; exit 0 ;;
     *)
       echo "Unknown argument: $1" >&2
-      echo "Usage: $0 --env-name <name> [--runs <n>] [--skip-fio] [--skip-cpu] [--skip-cold-start]" >&2
+      usage >&2
       exit 1
       ;;
   esac
 done
 
 if [[ -z "$ENV_NAME" ]]; then
-  echo "ERROR: --env-name is required" >&2
+  echo "ERROR: --env-name is required (e.g. ec2-direct, runpod-pod)" >&2
+  usage >&2
   exit 1
 fi
 
 # --- Create results directory ---
 TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-RESULTS_DIR="${SCRIPT_DIR}/results/${ENV_NAME}/${TIMESTAMP}"
+if [[ -n "$COMPARISON" ]]; then
+  RESULTS_DIR="${SCRIPT_DIR}/results/${COMPARISON}/${ENV_NAME}/${TIMESTAMP}"
+else
+  echo "WARN: --comparison not provided. Writing to legacy path results/${ENV_NAME}/${TIMESTAMP}/." >&2
+  echo "WARN: New runs should use --comparison <slug>, e.g. --comparison 8gpu-32b-tp8." >&2
+  RESULTS_DIR="${SCRIPT_DIR}/results/${ENV_NAME}/${TIMESTAMP}"
+fi
 mkdir -p "$RESULTS_DIR"
 
 echo "=============================================="
 echo "  RunPod Benchmark Harness"
 echo "=============================================="
+if [[ -n "$COMPARISON" ]]; then
+  echo "Comparison:  $COMPARISON"
+fi
 echo "Environment: $ENV_NAME"
 echo "Timestamp:   $TIMESTAMP"
 echo "Results:     $RESULTS_DIR"
@@ -156,5 +194,35 @@ echo "=============================================="
 echo "Results:  $RESULTS_DIR"
 echo "Summary:  ${RESULTS_DIR}/summary.txt"
 echo ""
+
+# Suggest the paired environment for comparison
+if [[ -n "$COMPARISON" ]]; then
+  case "$ENV_NAME" in
+    ec2-direct) PAIRED_ENV="runpod-pod" ;;
+    runpod-pod) PAIRED_ENV="ec2-direct" ;;
+    baseline)   PAIRED_ENV="treatment" ;;
+    treatment)  PAIRED_ENV="baseline" ;;
+    *)          PAIRED_ENV="" ;;
+  esac
+  if [[ -n "$PAIRED_ENV" ]]; then
+    PAIRED_DIR="${SCRIPT_DIR}/results/${COMPARISON}/${PAIRED_ENV}"
+    if [[ -d "$PAIRED_DIR" ]]; then
+      LATEST_PAIRED=$(ls -1d "${PAIRED_DIR}"/*/ 2>/dev/null | sort | tail -1 | sed 's:/*$::')
+      if [[ -n "$LATEST_PAIRED" ]]; then
+        echo "Paired ($PAIRED_ENV) run available at:"
+        echo "  $LATEST_PAIRED"
+        echo ""
+        echo "Compare:"
+        echo "  ./compare.py $LATEST_PAIRED $RESULTS_DIR"
+        exit 0
+      fi
+    fi
+    echo "No paired $PAIRED_ENV run found yet under results/$COMPARISON/."
+    echo "Run the other side, then compare:"
+    echo "  ./compare.py results/$COMPARISON/$PAIRED_ENV/<ts> $RESULTS_DIR"
+    exit 0
+  fi
+fi
+
 echo "To compare with another run:"
 echo "  ./compare.py $RESULTS_DIR <other_results_dir>"
